@@ -190,8 +190,8 @@ public class MemberDAO {
 		
 		Connection conn = null;				// db 계정 연결 클래스
 		PreparedStatement pstmt = null;		// 향상된 statement 클래스. sql구문 전달 역할
-		String sql = "select * from member where member_name = ? order by member_id";
-		ResultSet rset = null;
+		String sql = "select * from member where member_name like ? order by member_id";
+		ResultSet rset = null;			// setString에 그냥 name을 집어넣고, 여기서 '%' || ? || '%' 써주는 식도 가능
 		List<Member> list = null;
 		
 		try {
@@ -202,8 +202,8 @@ public class MemberDAO {
 			
 //				 3. 쿼리문 생성 및 Statement 객체(PreparedStatement) 생성
 			pstmt = conn.prepareStatement(sql); // 미완성 쿼리 전달
-			pstmt.setString(1, name);
-			
+			pstmt.setString(1, "%" + name + "%");	// setString에 들어간 문자열은 sql쿼리상에서 ' '로 감싸진다.
+													// 따라서 여기서 %를 양쪽에 붙여주어 '%이름%'를 만든다.
 //				 4. 쿼리 전송 (실행) - 결과값 받아냄
 			// DQL select문인 경우에는 executeQuery() 호출 -> ResultSet 반환
 			rset = pstmt.executeQuery();
